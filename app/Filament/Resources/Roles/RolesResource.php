@@ -13,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Builder;
 
 class RolesResource extends Resource
 {
@@ -45,5 +46,14 @@ class RolesResource extends Resource
             'index' => ListRoles::route('/'),
             'edit' => EditRoles::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where(function ($query) {
+            if (!auth()->user()->hasRole('super-admin')) {
+                $query->whereRaw('1 = 0');
+            }
+        });
     }
 }

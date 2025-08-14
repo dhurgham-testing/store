@@ -11,6 +11,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Database\Eloquent\Builder;
 
 class PermissionsResource extends Resource
 {
@@ -42,5 +43,14 @@ class PermissionsResource extends Resource
         return [
             'index' => ListPermissions::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where(function ($query) {
+            if (!auth()->user()->hasRole('super-admin')) {
+                $query->whereRaw('1 = 0');
+            }
+        });
     }
 }
