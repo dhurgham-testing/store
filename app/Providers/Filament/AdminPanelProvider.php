@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\DhurghamEgoWidget;
+use Exception;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,6 +21,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
+    /**
+     * @throws Exception
+     */
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -27,6 +31,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->profile()
+            ->globalSearch(false)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -38,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 DhurghamEgoWidget::class,
             ])
+            ->brandName('Abr Store')
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
