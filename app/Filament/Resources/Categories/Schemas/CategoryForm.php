@@ -46,7 +46,7 @@ class CategoryForm
                     ->imageCropAspectRatio('16:9')
                     ->imageResizeTargetWidth('1920')
                     ->imageResizeTargetHeight('1080')
-                    ->disk('public')
+                    ->disk(config('filesystems.default'))
                     ->directory('categories')
                     ->visibility('public')
                     ->preserveFilenames()

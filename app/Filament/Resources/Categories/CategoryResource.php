@@ -7,12 +7,14 @@ use App\Filament\Resources\Categories\Pages\ListCategories;
 use App\Filament\Resources\Categories\Schemas\CategoryForm;
 use App\Filament\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Category;
+use App\Models\Image;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryResource extends Resource
 {
@@ -44,7 +46,7 @@ class CategoryResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where(function ($query) {
+        return parent::getEloquentQuery()->with('image')->where(function ($query) {
             if (!auth()->user()->hasAnyRole('admin','super-admin')) {
                 $query->whereRaw('1 = 0');
             }
@@ -56,5 +58,53 @@ class CategoryResource extends Resource
         return 'Store Management';
     }
 
+    protected static function afterCreate(Category $record, array $data): void
+    {
+        // Handle image upload
+        if (isset($data['image']) && is_array($data['image'])) {
+            $imagePath = $data['image'][0] ?? null;
+            
+            if ($imagePath) {
+                $image = Image::create([
+                    'path' => $imagePath,
+                    'alt_text' => $record->name . ' category image',
+                ]);
+                
+                $record->update(['image_id' => $image->id]);
+            }
+        }
+    }
 
+    protected static function afterUpdate(Category $record, array $data): void
+    {
+        // Handle image upload/update
+        if (isset($data['image']) && is_array($data['image'])) {
+            $imagePath = $data['image'][0] ?? null;
+            
+            if ($imagePath) {
+                // Delete old image if exists
+                if ($record->image) {
+                    Storage::disk(config('filesystems.default'))->delete($record->image->path);
+                    $record->image->delete();
+                }
+                
+                // Create new image record
+                $image = Image::create([
+                    'path' => $imagePath,
+                    'alt_text' => $record->name . ' category image',
+                ]);
+                
+                $record->update(['image_id' => $image->id]);
+            }
+        }
+    }
+
+    protected static function afterDelete(Category $record): void
+    {
+        // Delete associated image
+        if ($record->image) {
+            Storage::disk(config('filesystems.default'))->delete($record->image->path);
+            $record->image->delete();
+        }
+    }
 }
