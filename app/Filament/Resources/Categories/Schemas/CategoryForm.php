@@ -51,7 +51,7 @@ class CategoryForm
                     ->visibility('public')
                     ->preserveFilenames()
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-                    ->maxSize(5120) // 5MB
+                    ->maxSize(5120)
                     ->storeFileNamesIn('original_filename')
                     ->columnSpanFull(),
             ]);
