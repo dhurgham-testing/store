@@ -10,7 +10,7 @@ class ImageService
     /**
      * Handle image upload and create Image record
      */
-    public function handleUpload($imageData, string $altText = null): ?Image
+    public function handleUpload($imageData): ?Image
     {
         if (!$imageData) {
             return null;
@@ -18,8 +18,7 @@ class ImageService
 
         if (is_string($imageData)) {
             return Image::query()->firstOrCreate(
-                ['path' => $imageData],
-                ['alt_text' => $altText]
+                ['path' => $imageData]
             );
         }
 
@@ -28,41 +27,11 @@ class ImageService
 
             if ($path) {
                 return Image::query()->firstOrCreate(
-                    ['path' => $path],
-                    ['alt_text' => $altText]
+                    ['path' => $path]
                 );
             }
         }
 
         return null;
-    }
-
-    /**
-     * Delete image file and record
-     */
-    public function deleteImage(Image $image): bool
-    {
-        try {
-            if (Storage::disk('public')->exists($image->path)) {
-                Storage::disk('public')->delete($image->path);
-            }
-            $image->delete();
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
-     * Get image URL for display
-     */
-    public function getImageUrl(?Image $image): string
-    {
-        if (!$image || !$image->path) {
-            return 'https://via.placeholder.com/400x300?text=No+Image';
-        }
-
-        return Storage::disk('public')->url($image->path);
     }
 }

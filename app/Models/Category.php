@@ -15,6 +15,8 @@ class Category extends Model
         'image_id',
     ];
 
+    protected $appends = ['image_url'];
+
     public function image(): BelongsTo
     {
         return $this->belongsTo(Image::class);
@@ -23,5 +25,14 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if ($this->image) {
+            return $this->image->path;
+        }
+        
+        return null;
     }
 }

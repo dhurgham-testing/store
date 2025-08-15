@@ -46,9 +46,13 @@ class CategoryForm
                     ->imageCropAspectRatio('16:9')
                     ->imageResizeTargetWidth('1920')
                     ->imageResizeTargetHeight('1080')
+                    ->disk('public')
                     ->directory('categories')
                     ->visibility('public')
-                    ->dehydrated()
+                    ->preserveFilenames()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->maxSize(5120)
+                    ->storeFileNamesIn('original_filename')
                     ->columnSpanFull(),
             ]);
     }
