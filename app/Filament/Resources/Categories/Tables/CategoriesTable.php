@@ -38,6 +38,7 @@ class CategoriesTable
 
                 ImageColumn::make('image.path')
                     ->label('Image')
+                    ->disk('s3')
                     ->circular()
                     ->size(40)
                     ->defaultImageUrl('https://via.placeholder.com/40x40?text=No+Image'),
@@ -76,29 +77,6 @@ class CategoriesTable
 
                         $record->update($data);
                     }),
-
-                Action::make('debug')
-                    ->label('🐛 Debug')
-                    ->icon('heroicon-o-bug-ant')
-                    ->color('warning')
-                    ->visible(fn () => auth()->user()->hasRole('super-admin'))
-                    ->action(function ($record) {
-                        dd([
-                            'Category Record' => $record->toArray(),
-                            'Category ID' => $record->id,
-                            'Category Name' => $record->name,
-                            'Image ID' => $record->image_id,
-                            'Image Relationship' => $record->image ? $record->image->toArray() : 'No image relationship',
-                            'Image Path' => $record->image ? $record->image->path : 'No image path',
-                            'Storage URL' => $record->image ? \Illuminate\Support\Facades\Storage::url($record->image->path) : 'No storage URL',
-                            'Filesystem Disk' => config('filesystems.default'),
-                            'S3 Config' => config('filesystems.disks.s3'),
-                            'Environment' => config('app.env'),
-                            'APP_URL' => config('app.url'),
-                            'Storage URL Test' => $record->image ? \Illuminate\Support\Facades\Storage::disk('s3')->url($record->image->path) : 'No S3 URL',
-                        ]);
-                    }),
-                
                 Action::make('open_image')
                     ->label('🖼️ Open Image')
                     ->icon('heroicon-o-arrow-top-right-on-square')
