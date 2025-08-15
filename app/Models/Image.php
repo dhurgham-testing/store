@@ -11,6 +11,8 @@ class Image extends Model
         'path',
     ];
 
+    protected $appends = ['url'];
+
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
@@ -24,5 +26,14 @@ class Image extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function getUrlAttribute(): string
+    {
+        if (filter_var($this->path, FILTER_VALIDATE_URL)) {
+            return $this->path;
+        }
+
+        return asset('storage/' . $this->path);
     }
 }

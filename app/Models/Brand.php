@@ -17,6 +17,8 @@ class Brand extends Model
         'status',
     ];
 
+    protected $appends = ['image_url'];
+
     protected $casts = [
         'status' => BrandStatus::class,
     ];
@@ -29,5 +31,14 @@ class Brand extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if ($this->image) {
+            return $this->image->path;
+        }
+        
+        return null;
     }
 }
