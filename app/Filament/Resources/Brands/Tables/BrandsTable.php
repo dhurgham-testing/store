@@ -38,7 +38,6 @@ class BrandsTable
 
                 ImageColumn::make('image.path')
                     ->label('Image')
-                    ->disk('s3')
                     ->circular()
                     ->size(40)
                     ->defaultImageUrl('https://via.placeholder.com/40x40?text=No+Image'),
