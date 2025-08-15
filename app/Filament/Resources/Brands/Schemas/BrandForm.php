@@ -44,8 +44,13 @@ class BrandForm
                     ->imageCropAspectRatio('16:9')
                     ->imageResizeTargetWidth('1920')
                     ->imageResizeTargetHeight('1080')
+                    ->disk(config('filesystems.default'))
                     ->directory('brands')
                     ->visibility('public')
+                    ->preserveFilenames()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->maxSize(5120)
+                    ->storeFileNamesIn('original_filename')
                     ->columnSpanFull(),
 
                 Select::make('status')
