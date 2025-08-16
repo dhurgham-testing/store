@@ -76,8 +76,8 @@ class BrandsTable
                     ->modalSubmitActionLabel('Save Changes')
                     ->action(function (array $data, $record) {
                         if (!empty($data['image'])) {
-                            $imageService = app(\App\Services\ImageService::class);
-                            $image = $imageService->handleUpload($data['image'], $data['name'] . ' brand image');
+                            $image_service = app(\App\Services\ImageService::class);
+                            $image = $image_service->handleUpload($data['image']);
 
                             if ($image) {
                                 $data['image_id'] = $image->id;
@@ -104,8 +104,7 @@ class BrandsTable
                     ->modalSubmitActionLabel('Create Brand')
                     ->action(function (array $data) {
                         if (!empty($data['image'])) {
-                            $imageService = app(\App\Services\ImageService::class);
-                            $image = $imageService->handleUpload($data['image']);
+                            $image = app(\App\Services\ImageService::class)->handleUpload($data['image']);
 
                             if ($image) {
                                 $data['image_id'] = $image->id;

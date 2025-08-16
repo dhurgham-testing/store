@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Admin\Categories\Tables;
 
 use App\Models\Category;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -15,7 +16,7 @@ use Filament\Tables\Table;
 class CategoriesTable
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function configure(Table $table): Table
     {
@@ -68,8 +69,8 @@ class CategoriesTable
                     ->modalSubmitActionLabel('Save Changes')
                     ->action(function (array $data, $record) {
                         if (!empty($data['image'])) {
-                            $imageService = app(\App\Services\ImageService::class);
-                            $image = $imageService->handleUpload($data['image'], $data['name'] . ' category image');
+                            $image_service = app(\App\Services\ImageService::class);
+                            $image = $image_service->handleUpload($data['image']);
 
                             if ($image) {
                                 $data['image_id'] = $image->id;
@@ -96,8 +97,7 @@ class CategoriesTable
                     ->modalSubmitActionLabel('Create Category')
                     ->action(function (array $data) {
                         if (!empty($data['image'])) {
-                            $imageService = app(\App\Services\ImageService::class);
-                            $image = $imageService->handleUpload($data['image']);
+                            $image = app(\App\Services\ImageService::class)->handleUpload($data['image']);
 
                             if ($image) {
                                 $data['image_id'] = $image->id;

@@ -24,8 +24,12 @@ class BrandForm
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdatedJs(<<<'JS'
+                        $set('slug', ($state ?? '')
+                            .toLowerCase()
+                            .replaceAll(' ', '-')
+                            .replaceAll(/[^a-z0-9\-]/g, ''))
+                    JS),
 
                 TextInput::make('slug')
                     ->required()
