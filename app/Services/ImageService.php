@@ -10,26 +10,16 @@ class ImageService
     /**
      * Handle image upload and create Image record
      */
-    public function handleUpload($imageData): ?Image
+    public function handleUpload($path): ?Image
     {
-        if (!$imageData) {
+        if (!$path) {
             return null;
         }
 
-        if (is_string($imageData)) {
+        if (is_string($path)) {
             return Image::query()->firstOrCreate(
-                ['path' => $imageData]
+                ['path' => sanitize_image_name($path)]
             );
-        }
-
-        if (is_array($imageData) && !empty($imageData)) {
-            $path = $imageData[0] ?? null;
-
-            if ($path) {
-                return Image::query()->firstOrCreate(
-                    ['path' => $path]
-                );
-            }
         }
 
         return null;
