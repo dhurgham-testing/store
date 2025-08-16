@@ -24,11 +24,13 @@ class CategoriesTable
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable()
+                    ->toggleable()
                     ->weight('bold'),
 
                 TextColumn::make('slug')
                     ->searchable()
                     ->sortable()
+                    ->toggleable()
                     ->color('gray'),
 
                 TextColumn::make('description')
@@ -39,12 +41,13 @@ class CategoriesTable
                 ImageColumn::make('image.path')
                     ->label('Image')
                     ->circular()
-                    ->size(40)
-                    ->defaultImageUrl('https://via.placeholder.com/40x40?text=No+Image'),
+                    ->toggleable()
+                    ->imageSize(40),
 
                 TextColumn::make('products_count')
                     ->label('Products')
                     ->counts('products')
+                    ->toggleable()
                     ->sortable(),
 
                 TextColumn::make('created_at')
@@ -93,16 +96,34 @@ class CategoriesTable
                     ->action(function ($record) {
                         if ($record->image) {
                             $url = \Illuminate\Support\Facades\Storage::url($record->image->path);
-                            
+
+                            // Test if image is accessible
+                            $headers = get_headers($url, 1);
+                            $isAccessible = strpos($headers[0], '200') !== false;
+
+                            $debugInfo = "Image URL: {$url}\n";
+                            $debugInfo .= "Accessible: " . ($isAccessible ? 'YES' : 'NO') . "\n";
+                            $debugInfo .= "Response: " . $headers[0] . "\n";
+                            $debugInfo .= "Content-Type: " . ($headers['Content-Type'] ?? 'Unknown') . "\n";
+                            $debugInfo .= "Current Domain: " . request()->getHost() . "\n\n";
+                            $debugInfo .= "Instructions:\n";
+                            $debugInfo .= "1. Open browser DevTools (F12)\n";
+                            $debugInfo .= "2. Go to Network tab\n";
+                            $debugInfo .= "3. Refresh the table page\n";
+                            $debugInfo .= "4. Look for failed image requests\n";
+                            $debugInfo .= "5. Check Console for CORS errors";
+
                             \Filament\Notifications\Notification::make()
-                                ->title('CORS Debug Info')
-                                ->body("Image URL: {$url}\n\nCheck browser Network tab for CORS errors when loading this image in the table.")
+                                ->title('Comprehensive Debug Info')
+                                ->body($debugInfo)
                                 ->persistent()
                                 ->send();
-                                
+
                             // Log for debugging
-                            \Illuminate\Support\Facades\Log::info('CORS Debug', [
+                            \Illuminate\Support\Facades\Log::info('Comprehensive CORS Debug', [
                                 'image_url' => $url,
+                                'is_accessible' => $isAccessible,
+                                'response_headers' => $headers,
                                 'current_domain' => request()->getHost(),
                                 'user_agent' => request()->userAgent(),
                             ]);
