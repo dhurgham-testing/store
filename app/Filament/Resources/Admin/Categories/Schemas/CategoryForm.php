@@ -49,7 +49,7 @@ class CategoryForm
                     ->preserveFilenames()
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                     ->maxSize(5120)
-                    ->storeFileNamesIn('original_filename')
+                    ->getUploadedFileNameForStorageUsing(fn($file) => sanitize_image_name($file->getClientOriginalName()))
                     ->columnSpanFull(),
             ]);
     }
