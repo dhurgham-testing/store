@@ -9,10 +9,9 @@ class TestController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $token = $request->input('token');
+        $token = $request->header('token');
         $redirect = $request->input('redirect');
-        $mr_id = $request->input('mr_id');
-
+        $mr_id = $request->header('mr_id');
         Log::info('Request Data', [
             'mr_id' => $mr_id,
             'redirect' => $redirect,
