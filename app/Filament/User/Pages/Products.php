@@ -3,6 +3,7 @@
 namespace App\Filament\User\Pages;
 
 use App\Models\Product;
+use App\Models\CartList;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Infolists\Components\TextEntry;
@@ -10,6 +11,7 @@ use Filament\Pages\Page;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Illuminate\Support\Facades\Auth;
 
 class Products extends Page implements HasActions, HasSchemas
 {
@@ -47,7 +49,31 @@ class Products extends Page implements HasActions, HasSchemas
 
     public function addToCart($product_id): void
     {
-        send_success_notification('item has been added to cart');
+        $user = Auth::user();
+
+        if (!$user) {
+            send_success_notification('Please login to add items to cart');
+            return;
+        }
+
+        $product = Product::query()->find($product_id);
+
+        if (!$product) {
+            send_success_notification('Product not found');
+            return;
+        }
+
+        if ($product->status !== 'published') {
+            send_success_notification('This product is not available');
+            return;
+        }
+
+        CartList::query()->create([
+            'user_id' => $user->id,
+            'product_id' => $product_id,
+        ]);
+
+        send_success_notification('Product added to cart successfully');
     }
 
     public function getViewData(): array

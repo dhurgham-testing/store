@@ -115,7 +115,23 @@
         </style>
 
                  <!-- Cart Items Grid -->
-         @if($cart_items->count() > 0)
+         @if($cart_items && $cart_items->count() > 0)
+
+             <!-- Debug: Cart items count: {{ $cart_items->count() }} -->
+             <!-- Debug: User ID: {{ Auth::id() }} -->
+             <!-- Debug: Cart items: @foreach($cart_items as $item) {{ $item->product->name ?? 'No product' }}, @endforeach -->
+             
+             <!-- Simple Debug Display -->
+             <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                 <strong>Debug Info:</strong><br>
+                 Cart Items Count: {{ $cart_items->count() }}<br>
+                 User ID: {{ Auth::id() }}<br>
+                 Cart Items: 
+                 @foreach($cart_items as $item)
+                     {{ $item->product->name ?? 'No product' }}{{ !$loop->last ? ', ' : '' }}
+                 @endforeach
+             </div>
+             
              <x-filament::section collapsible>
                  <div class="cart-grid">
                      @foreach($cart_items as $cart_item)

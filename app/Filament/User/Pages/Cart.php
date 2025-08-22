@@ -138,10 +138,15 @@ class Cart extends Page implements HasActions, HasForms
             return ['cart_items' => collect()];
         }
 
+        $cartItems = CartList::with(['product.category', 'product.brand', 'product.image'])
+            ->where('user_id', $user->id)
+            ->get();
+
+        // Debug information
+        \Log::info('Cart items for user ' . $user->id . ': ' . $cartItems->count());
+        
         return [
-            'cart_items' => CartList::with(['product.category', 'product.brand', 'product.image'])
-                ->where('user_id', $user->id)
-                ->get(),
+            'cart_items' => $cartItems,
         ];
     }
 
