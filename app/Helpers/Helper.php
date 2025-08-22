@@ -52,4 +52,46 @@ if (! function_exists('sanitize_image_name')) {
 
         return trim_string($withoutSpaces);
     }
+
+    if (! function_exists('send_success_notification')) {
+        /**
+         * Sends Filament Notification
+         */
+        function send_success_notification(string $title = 'Done!', string $body = ''): void
+        {
+            Notification::make()
+                ->title($title)
+                ->body($body)
+                ->success()
+                ->send();
+        }
+    }
+
+    if (! function_exists('send_error_notification')) {
+        /**
+         * Sends Filament Notification
+         */
+        function send_error_notification(string $title = 'Error!', string $body = ''): void
+        {
+            Notification::make()
+                ->title($title)
+                ->body($body)
+                ->danger()
+                ->send();
+        }
+    }
+
+    if (! function_exists('send_warning_notification')) {
+        /**
+         * Sends Filament Notification
+         */
+        function send_warning_notification(string $title = 'Warning!', string $body = ''): void
+        {
+            Notification::make()
+                ->title($title)
+                ->body($body)
+                ->warning()
+                ->send();
+        }
+    }
 }
