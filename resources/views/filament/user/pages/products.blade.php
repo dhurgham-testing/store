@@ -1,11 +1,11 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Page Header -->
-    <div class="text-center space-y-2 mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Discover Our Products</h1>
-        <p class="text-gray-600">Find the perfect items for your needs</p>
+    <div class="mb-8">
+        {{ $this->productSchema }}
     </div>
+    <br><br>
 
-         <style>
+    <style>
          body {
              font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
              background-color: #f9fafb;
@@ -140,7 +140,7 @@
                  <!-- Image Container -->
                  <div class="product-image">
                      <img
-                         src="{{ $product->image?->url ?? asset('images/placeholder-product.jpg') }}"
+                         src="{{ $product->image ? \Illuminate\Support\Facades\Storage::url($product->image->path) : asset('images/placeholder-product.jpg') }}"
                          alt="{{ $product->name }}"
                          loading="lazy"
                      />
@@ -168,10 +168,7 @@
                      <div style="display: flex; align-items: center; justify-content: space-between;">
                          <!-- Price Section -->
                          <div class="price-section">
-                             <span class="current-price">${{ number_format($product->price, 2) }}</span>
-                             @if(isset($product->original_price) && $product->original_price > $product->price)
-                                 <span class="original-price">${{ number_format($product->original_price, 2) }}</span>
-                             @endif
+                             <span class="current-price">IQD {{ number_format($product->price, 2) }}</span>
                          </div>
 
                          <x-filament::button
@@ -182,7 +179,6 @@
                              class="rounded-full w-10 h-10 p-0"
                              wire:click="addToCart({{ $product->id }})"
                              :disabled="$product->stock <= 0"
-                             :title="$product->stock > 0 ? 'Add to Cart' : 'Out of Stock'"
                          >
                          </x-filament::button>
 

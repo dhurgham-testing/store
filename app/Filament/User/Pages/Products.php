@@ -3,16 +3,17 @@
 namespace App\Filament\User\Pages;
 
 use App\Models\Product;
-use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Page;
-use Filament\Support\Icons\Heroicon;
-use Illuminate\Contracts\View\View;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
 
-class Products extends Page implements HasActions
+class Products extends Page implements HasActions, HasSchemas
 {
-    use InteractsWithActions;
+    use InteractsWithActions,InteractsWithSchemas;
 
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-shopping-bag';
 
@@ -26,9 +27,27 @@ class Products extends Page implements HasActions
 
     protected static ?int $navigationSort = 2;
 
+    /**
+     * @throws \Exception
+     */
+    public function productSchema(Schema $schema): Schema
+    {
+        return $schema
+            ->state([
+                'placeholder' => "Discover Our Products, Find the perfect items for your need",
+            ])
+            ->components([
+                TextEntry::make('placeholder')
+                    ->size('lg')
+                    ->weight('bold')
+                    ->color('primary')
+                    ->alignment('center')
+            ]);
+    }
+
     public function addToCart($product_id): void
     {
-        send_success_notification('item add to cart');
+        send_success_notification('item has been added to cart');
     }
 
     public function getViewData(): array
