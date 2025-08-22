@@ -63,7 +63,7 @@ class Products extends Page implements HasActions, HasSchemas
             return;
         }
 
-        if ($product->status !== 'published') {
+        if ($product->status->value !== 'published') {
             send_success_notification('This product is not available');
             return;
         }
