@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use App\Policies\BrandPolicy;
 use App\Policies\CategoryPolicy;
 use App\Policies\PermissionPolicy;
+use App\Policies\ProductPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Spatie\Permission\Models\Permission;
@@ -24,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
         Category::class => CategoryPolicy::class,
         Brand::class => BrandPolicy::class,
+        Product::class => ProductPolicy::class,
     ];
 
     /**
