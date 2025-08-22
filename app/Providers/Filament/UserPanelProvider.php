@@ -7,7 +7,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use App\Filament\User\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -27,10 +27,11 @@ class UserPanelProvider extends PanelProvider
     {
         return $panel
             ->id('user')
-            ->path('user')
+            ->path('store')
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->darkMode(false)
             ->font('IBM Plex Sans Arabic', provider: GoogleFontProvider::class)
             ->login()
             ->registration()
